@@ -1,5 +1,5 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo mkdir /itheroes
-sudo touch /test1
+sudo mkdir /tmp/itheroes
+sudo touch /tmp/test1
