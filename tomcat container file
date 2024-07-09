@@ -10,8 +10,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from version control
-                git 'https://your-repo-url.git'
+                // Checkout the code from the Git repository
+                git 'https://github.com/itheroesacademy/jenkine-pipeline-maven-demo'
             }
         }
 
@@ -28,7 +28,7 @@ pipeline {
                     // Create a Dockerfile dynamically
                     writeFile file: 'Dockerfile', text: """
                     FROM tomcat:9.0
-                    COPY target/*.war /usr/local/tomcat/webapps/yourapp.war
+                    COPY target/my-webapp.jar /usr/local/tomcat/webapps/
                     """
 
                     // Build the Docker image
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     // Run the Docker container
-                    sh "docker run -d -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    sh "docker run -d -p 8083:8083 ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
         }
