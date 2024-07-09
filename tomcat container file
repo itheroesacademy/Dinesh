@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define environment variables
+        DOCKER_IMAGE = "my-tomcat-app"
+        DOCKER_TAG = "latest"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from version control
+                git 'https://your-repo-url.git'
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                // Build the project using Maven
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Create a Dockerfile dynamically
+                    writeFile file: 'Dockerfile', text: """
+                    FROM tomcat:9.0
+                    COPY target/*.war /usr/local/tomcat/webapps/yourapp.war
+                    """
+
+                    // Build the Docker image
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    // Run the Docker container
+                    sh "docker run -d -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                }
+            }
+        }
+    }
+}
